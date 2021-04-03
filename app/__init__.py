@@ -1,4 +1,4 @@
-from .extensions import db, migrate
+from .extension import db, migrate
 
 from flask import Flask
 from flask_admin import Admin
