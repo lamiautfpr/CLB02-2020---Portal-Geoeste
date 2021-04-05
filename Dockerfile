@@ -5,12 +5,11 @@ RUN apt-get update &&\
 
 FROM python:3.8-slim-buster
 
-RUN python3 -m venv /opt/venv
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Install dependencies:
-COPY requirements.txt .
-RUN . /opt/venv/bin/activate && pip install -r requirements.txt
+EXPOSE 5000
 
-# Run the application:
-COPY manage.py .
-CMD . /opt/venv/bin/activate && exec python manage.py runserver
+COPY . .
+
+CMD ["python", "manage.py", "runserver"]
