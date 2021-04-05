@@ -1,18 +1,16 @@
 FROM gcr.io/google-appengine/python
 
-RUN apt-get update && apt-get install -y \
-  binutils \
-  gdal-bin \
-  python-gdal
+RUN apt-get update &&\
+    apt-get install -y binutils libproj-dev gdal-bin
 
-RUN virtualenv /env -p python3.6
+FROM python:3.8-slim-buster
 
-ENV VIRTUAL_ENV /env
-ENV PATH /env/bin:$PATH
+RUN python3 -m venv /opt/venv
 
-ADD requirements.txt /app/requirements.txt
-RUN pip install -r /app/requirements.txt
+# Install dependencies:
+COPY requirements.txt .
+RUN . /opt/venv/bin/activate && pip install -r requirements.txt
 
-ADD . /app
-
-CMD python ./manage.py runserver
+# Run the application:
+COPY manage.py .
+CMD . /opt/venv/bin/activate && exec python manage.py runserver
