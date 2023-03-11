@@ -1,0 +1,39 @@
+service: portal-geoeste
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 60
+  httpApi: 
+    cors: true
+  environment:
+    SQLALCHEMY_DATABASE_URI: 'postgresql://f4ustx:#ewGp3NyU2pe+FuP@lamiadb1.ceoy3jbkraru.us-east-1.rds.amazonaws.com:5432/portalgeoeste'
+    SECRET_KEY: 'RBxkcPm'
+package:
+  excludeDevDependencies: true
+  exclude:
+    - .git/**
+    - .vscode/**
+    - venv/**
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+
+functions:
+  api:
+    handler: wsgi_handler.handler
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
+custom:
+  wsgi:
+    app: run.app
+      #pipArgs: --no-deps
+    pythonBin: python3
+  packRequirements: true
+  pythonRequirements:
+    dockerizePip: true
+      #dockerFile: Dockerfile
+    slim: true

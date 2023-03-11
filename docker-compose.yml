@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+
+  postgres_pg:
+    image: postgis/postgis
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+    ports:
+      - '5432:5432'
+    networks:
+      - portal-geoeste-network
+    
+    volumes:
+      - ./postgres_pg:/var/lib/postgresql/data
+      - ./geodatabase.sql:/docker-entrypoint-initdb.d/geodatabase.sql
+  redis_pg:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+    networks:
+      - portal-geoeste-network
+    volumes:
+      - ./data/redis:/data
+
+  api-portal-geoeste:
+    container_name: api-portal-geoeste
+    restart: unless-stopped
+    image: api-portal-geoeste-prod
+    build:
+      context: api
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_URL='redis://redis_pg:6379'
+      - SECRET_KEY='RBxkcPm'
+    networks:
+      - portal-geoeste-network
+    depends_on:
+      - postgres_pg
+      - redis_pg
+    
+  client-portal-geoeste:
+    container_name: client-portal-geoeste
+    restart: unless-stopped
+    image: client-portal-geoeste-prod
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - '3000:80'
+    networks:
+      - portal-geoeste-network
+    depends_on:
+      - api-portal-geoeste
+
+networks:
+  portal-geoeste-network:
