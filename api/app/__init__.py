@@ -1,17 +1,14 @@
 from app.Auth.Services.auth_services import init_auth_services
-from app.Errors.exceptions import InvalidTokenException, NoTokenException
+from app.Errors.exceptions import NoTokenException
 from app.Errors.handlers import init_error_handlers
-import jwt
-from flask import Flask, request, jsonify, session
-from flask_restx import Api, Resource
+from flask import Flask, jsonify, session
+from flask_restx import Api
 from flask_compress import Compress
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from passlib.hash import pbkdf2_sha256
 from flask_session import Session
 from .extensions import db, login_manager, data_ns
 from .Data.modules.Map.Services.MapModuleService import MapModuleService
-from .Data.modules.Member.MemberModuleService import MemberModuleService
+from .Data.modules.Member.Services.MemberModuleService import MemberModuleService
 
 
 def register_extensions(app):
