@@ -9,6 +9,7 @@ map_schema=data_ns.model(
         "map_id":fields.String(),
         "map_desc":fields.String(),
         "map_value":fields.String(),
+        "static":fields.Boolean(),
         "map_atr": fields.String(),
         "map_ctg": fields.String(),
         "choropleth": fields.Integer(),

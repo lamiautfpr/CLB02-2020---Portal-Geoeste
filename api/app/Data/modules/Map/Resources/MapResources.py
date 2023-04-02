@@ -149,19 +149,17 @@ def init_map_resources(service: ServiceProtocol):
                 map = service.dao.get_one_by(map_id=map_id)
                 atr = map.map_atr
                 
-                if map and map.static == False or map.static == None:
+                if map and not map.static:
                     if map.map_atr:
                         if map.map_ctg != None and map.map_ctg != 'Geologia':
-                            sql=f'SELECT geometry, colors_{map.map_atr} as colors, NOME, {atr} as atr FROM {map.map_ctg}'; 
+                            sql=f'SELECT geometry, colors_{map.map_atr} as colors, NOME, {atr} as atr FROM {map.map_ctg}';  
                         else:
-                            sql=f'SELECT geometry, colors, {atr} as atr FROM ' + map.map_id
-                    else:
-                        sql='SELECT geometry FROM ' + map.map_id
+                            sql='SELECT geometry FROM ' + map.map_id
                     df=gpd.read_postgis(sql, config.SQLALCHEMY_DATABASE_URI, geom_col='geometry')
                     geodf=df.to_json()
                     return geodf, 200
                 else:
-                    return {"Error":"Not found"}, 404
+                    return {"Error":"Resource Not found"}, 404
             except Exception as e:
                 return {"Error":f"{e}"}, 404
 
