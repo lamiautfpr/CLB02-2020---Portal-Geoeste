@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { DateTime } from "luxon";
 import { useDownload } from "../../hooks/useDownload";
@@ -7,12 +6,10 @@ import { Alert, Container } from "react-bootstrap";
 import { DownloadBtn } from "./style";
 import { Navigate } from "react-router-dom";
 import { IDownloadProps } from "../../interfaces";
+import api from "../../services/api";
 
 function Download(args: IDownloadProps) {
-  var path = "/api/Data/mapas/"+ String(args.id) + "/download"
-  if(args.downloadType === "publication")
-    path = "/api/Data/publications/download/"+ String(args.id)
-  
+  const path = args.downloadType === "publication" ? "/api/Data/publications/download/"+ String(args.id) : '/api/Data/mapas/'+ String(args.id) + '/download'
   const DownloadFile: React.FC = () => {
   const [buttonState, setButtonState] = useState<ButtonState>(
     ButtonState.Primary
@@ -38,7 +35,7 @@ function Download(args: IDownloadProps) {
 
   const downloadFile = () => {
     
-    return axios.get(
+    return api.get(
       path,
       {
         responseType: "blob",
