@@ -38,7 +38,7 @@ const NavBar: React.FC<IMenuBurgerProps> = ({ page,  status}) => {
           </a>
         </NavItem>
         <NavItem style={{"marginTop":"3vw"}} active={page === 'project'} opt={'white'}>
-          <Link to="/mapas">CONHEÇA O PROJETO</Link>
+          <Link to="/Saiba_mais">CONHEÇA O PROJETO</Link>
         </NavItem>
         <NavItem style={{"marginTop":"3.7vw"}} active={page === 'resources'} opt={'white'}>
           <Link to="/publicacoes">PUBLICAÇÕES</Link>
