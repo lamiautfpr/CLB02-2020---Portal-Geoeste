@@ -154,7 +154,7 @@ def init_map_resources(service: ServiceProtocol):
                         if map.map_ctg != None and map.map_ctg != 'Geologia':
                             sql=f'SELECT geometry, colors_{atr} as colors, NOME, {atr} as atr FROM {map.map_ctg}';  
                         else:
-                            sql=f'SELECT geometry, {atr} FROM ' + map.map_id
+                            sql=f'SELECT geometry, {atr} as atr FROM ' + map.map_id
                     df=gpd.read_postgis(sql, config.SQLALCHEMY_DATABASE_URI, geom_col='geometry')
                     geodf=df.to_json()
                     return geodf, 200
