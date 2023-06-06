@@ -152,9 +152,9 @@ def init_map_resources(service: ServiceProtocol):
                 if map and not map.static:
                     if map.map_atr:
                         if map.map_ctg != None and map.map_ctg != 'Geologia':
-                            sql=f'SELECT geometry, colors_{map.map_atr} as colors, NOME, {atr} as atr FROM {map.map_ctg}';  
+                            sql=f'SELECT geometry, colors_{atr} as colors, NOME, {atr} as atr FROM {map.map_ctg}';  
                         else:
-                            sql='SELECT geometry FROM ' + map.map_id
+                            sql=f'SELECT geometry, {atr} FROM ' + map.map_id
                     df=gpd.read_postgis(sql, config.SQLALCHEMY_DATABASE_URI, geom_col='geometry')
                     geodf=df.to_json()
                     return geodf, 200
@@ -165,8 +165,9 @@ def init_map_resources(service: ServiceProtocol):
 
 
     class MapDownloadResource(Resource):
-        
         route = '/mapas/<string:map_id>/download'
+        """        
+
         @token_required        
         def get(self, current_user: User, map_id):
             try:
@@ -178,7 +179,7 @@ def init_map_resources(service: ServiceProtocol):
 
             except Exception as e:
                 return {"Error":"{}".format(e)}, 404
-    
+        """    
 
     return [
                 MapsResource, MapsByCategoryResource, MapsBySubcategoryResource, MapResource, 
